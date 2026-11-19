@@ -1,0 +1,1066 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/rlocke20/python-assignment-1/blob/main/wk11_RobertLocke\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "5LKi3Zv0JgZh"
+      },
+      "source": [
+        "# Programming Practice Activity #5\n",
+        "## Lists, Loops, elif, Tuples, Dictionaries, Sets, and Error Handling\n",
+        "\n",
+        "---\n",
+        "\n",
+        "### Night Shift at Riverside General\n",
+        "\n",
+        "It is 11 PM and the ER is full. You are the junior data analyst on the night shift, and the charge nurse needs small Python tools to keep patients, beds, and alerts organized. All of the patients in this activity are fictional.\n",
+        "\n",
+        "**How to use this worksheet**\n",
+        "\n",
+        "1. Run the setup cell at the top of each part.\n",
+        "2. Replace every `___` with the correct code.\n",
+        "3. Run the cell and compare your output to the expected output.\n",
+        "\n",
+        "There are 20 questions in 7 parts.\n",
+        "\n",
+        "---"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "I2jgGbo_JgZi"
+      },
+      "source": [
+        "## Part 1: Lists\n",
+        "### The Waiting Room\n",
+        "\n",
+        "A list keeps items in order inside square brackets. You read an item by its index, and indexes start at 0.\n",
+        "\n",
+        "```python\n",
+        "line = ['Avery', 'Jordan']\n",
+        "print(line[0])        # Avery\n",
+        "line.append('Sam')    # add to the end\n",
+        "line.remove('Avery')  # remove by value\n",
+        "print(len(line))      # 2\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 12,
+      "metadata": {
+        "id": "5EFXFfK9JgZi"
+      },
+      "outputs": [],
+      "source": [
+        "# Run this cell to set up the waiting room\n",
+        "waiting_room = ['Avery', 'Jordan', 'Sam']"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "TROZj5EoJgZj"
+      },
+      "source": [
+        "**Question 1:** Print the first patient in line.\n",
+        "\n",
+        "Expected output: `Avery`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 13,
+      "metadata": {
+        "id": "i6duqhcNJgZj",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "c8c86e47-cd29-490c-9318-e2c70b249127"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Avery\n"
+          ]
+        }
+      ],
+      "source": [
+        "# The first item is at index 0\n",
+        "print(waiting_room[0])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "6pAFEDh_JgZj"
+      },
+      "source": [
+        "**Question 2:** Riley just arrived. Add `'Riley'` to the end of the list, then print the list.\n",
+        "\n",
+        "Expected output: `['Avery', 'Jordan', 'Sam', 'Riley']`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 14,
+      "metadata": {
+        "id": "4QWUlrWfJgZj",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "022c8236-6d08-49ba-8c43-59e789627cba"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "['Avery', 'Jordan', 'Sam', 'Riley']\n"
+          ]
+        }
+      ],
+      "source": [
+        "# Use the list method that adds one item to the end\n",
+        "waiting_room.append('Riley')\n",
+        "\n",
+        "print(waiting_room)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "_c6l_JkeJgZj"
+      },
+      "source": [
+        "**Question 3:** Sam was called back to a treatment room. Remove `'Sam'` from the list, then print how many patients are still waiting.\n",
+        "\n",
+        "Expected output: `3`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 15,
+      "metadata": {
+        "id": "Ja2uzRIOJgZj",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "53755828-6a89-4e99-a976-bba735786382"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "3\n"
+          ]
+        }
+      ],
+      "source": [
+        "# remove() takes the value to delete. len() counts the items.\n",
+        "waiting_room.remove('Sam')\n",
+        "\n",
+        "print(len(waiting_room))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "8LEWNfMEJgZk"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "## Part 2: for Loops\n",
+        "### Hourly Rounds\n",
+        "\n",
+        "A `for` loop repeats the same steps for every item in a list. `range(start, stop)` counts from `start` up to, but not including, `stop`.\n",
+        "\n",
+        "```python\n",
+        "for name in ['Avery', 'Jordan']:\n",
+        "    print(name)\n",
+        "\n",
+        "for number in range(1, 3):\n",
+        "    print(number)         # 1, then 2\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 16,
+      "metadata": {
+        "id": "U-vMhhT2JgZk"
+      },
+      "outputs": [],
+      "source": [
+        "# Run this cell to load tonight's patients and temperatures\n",
+        "patients = ['Avery', 'Jordan', 'Riley']\n",
+        "temps = [98.0, 102.0, 100.0]"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "J3CbisqvJgZk"
+      },
+      "source": [
+        "**Question 4:** Print a message for every patient in the `patients` list.\n",
+        "\n",
+        "Expected output:\n",
+        "```\n",
+        "Checking Avery\n",
+        "Checking Jordan\n",
+        "Checking Riley\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 17,
+      "metadata": {
+        "id": "GudddiNZJgZk",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "f6d70183-3d12-4dd3-933d-2eabe5a3bfce"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Checking Avery\n",
+            "Checking Jordan\n",
+            "Checking Riley\n"
+          ]
+        }
+      ],
+      "source": [
+        "# Use the same name in the for line and inside the braces\n",
+        "for patient in patients:\n",
+        "    print(f'Checking {patient}')"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "z7_8gPL5JgZk"
+      },
+      "source": [
+        "**Question 5:** Print a line for hours 1, 2, and 3. Fill in the two numbers for `range()`.\n",
+        "\n",
+        "Expected output:\n",
+        "```\n",
+        "Hour 1: rounds complete\n",
+        "Hour 2: rounds complete\n",
+        "Hour 3: rounds complete\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 18,
+      "metadata": {
+        "id": "2EZ_k3SgJgZk",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "f3971096-1c8c-420d-8dc0-3fab902cb0af"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Hour 1: rounds complete\n",
+            "Hour 2: rounds complete\n",
+            "Hour 3: rounds complete\n"
+          ]
+        }
+      ],
+      "source": [
+        "# The stop number is not included in the loop\n",
+        "for hour in range(1, 4):\n",
+        "    print(f'Hour {hour}: rounds complete')"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "9VAU_ScfJgZk"
+      },
+      "source": [
+        "**Question 6:** Add up every temperature in `temps` with a loop, then print the average.\n",
+        "\n",
+        "Expected output: `100.0`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 19,
+      "metadata": {
+        "id": "auKs1RSWJgZk",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "d7629485-b73a-4139-cad3-263238f1b517"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "100.0\n"
+          ]
+        }
+      ],
+      "source": [
+        "# Start the total at 0, then add each temperature to it\n",
+        "total = 0\n",
+        "for temp in temps:\n",
+        "    total += temp      # hint: use +=\n",
+        "\n",
+        "# The average is the total divided by the number of readings\n",
+        "print(total / len(temps))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "_rHoAMyOJgZk"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "## Part 3: if, elif, and else\n",
+        "### Triage\n",
+        "\n",
+        "Triage sorts patients by urgency. An `if`, `elif`, `else` chain checks conditions from the top and runs only the first one that is True. Note that `elif` is not a loop. The chain runs once and picks one path.\n",
+        "\n",
+        "```python\n",
+        "score = 7\n",
+        "if score >= 9:\n",
+        "    print('High')\n",
+        "elif score >= 5:\n",
+        "    print('Medium')\n",
+        "else:\n",
+        "    print('Low')       # prints: Medium\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "xU-hzU9-JgZk"
+      },
+      "source": [
+        "**Question 7:** Finish the temperature triage chain.\n",
+        "\n",
+        "Expected output: `YELLOW`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "aWhEYQrKJgZl"
+      },
+      "outputs": [],
+      "source": [
+        "temp = 103.2\n",
+        "\n",
+        "# Replace each ___ with elif or else\n",
+        "if temp >= 104:\n",
+        "    print('RED')\n",
+        "___ temp >= 101:\n",
+        "    print('YELLOW')\n",
+        "___ temp >= 99:\n",
+        "    print('GREEN')\n",
+        "___:\n",
+        "    print('WHITE')"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "rG3KPk3LJgZl"
+      },
+      "source": [
+        "**Question 8:** Predict the output before you run the cell. Write your prediction in the comment, then run it to check.\n",
+        "\n",
+        "Think about which condition is True first, reading from the top."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "Z1guAjDQJgZl"
+      },
+      "outputs": [],
+      "source": [
+        "pain_level = 5\n",
+        "\n",
+        "if pain_level >= 8:\n",
+        "    print('Immediate')\n",
+        "elif pain_level >= 4:\n",
+        "    print('Soon')\n",
+        "elif pain_level >= 2:\n",
+        "    print('Later')\n",
+        "else:\n",
+        "    print('Routine')\n",
+        "\n",
+        "# My prediction was: ___"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "pLtCZTWNJgZl"
+      },
+      "source": [
+        "**Question 9:** Write the oxygen level alert. A level of 95 or more is `NORMAL`, 90 or more is `LOW`, and anything below that is `CRITICAL`.\n",
+        "\n",
+        "Expected output: `LOW`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "LZhoHAAfJgZl"
+      },
+      "outputs": [],
+      "source": [
+        "oxygen_level = 92\n",
+        "\n",
+        "# Fill in the comparison operator and the missing keywords\n",
+        "if oxygen_level ___ 95:\n",
+        "    print('NORMAL')\n",
+        "___ oxygen_level >= 90:\n",
+        "    print('LOW')\n",
+        "___:\n",
+        "    print('CRITICAL')"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "wUdoKA5NJgZl"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "## Part 4: Tuples\n",
+        "### The Patient Wristband\n",
+        "\n",
+        "A tuple is like a list that cannot be changed after it is created. It uses round brackets, and you read items by index.\n",
+        "\n",
+        "```python\n",
+        "badge = (101, 'Nurse Kim', 'ER')\n",
+        "print(badge[1])                 # Nurse Kim\n",
+        "badge_id, name, unit = badge    # unpacking\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 20,
+      "metadata": {
+        "id": "uiqMdxhCJgZl"
+      },
+      "outputs": [],
+      "source": [
+        "# Run this cell to set up the wristband\n",
+        "wristband = (4021, 'Avery Park', 'O+')"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "J0m9NdHtJgZl"
+      },
+      "source": [
+        "**Question 10:** Create a tuple called `new_patient` for ID `4022`, name `'Jordan Lee'`, and blood type `'A+'`.\n",
+        "\n",
+        "Expected output: `(4022, 'Jordan Lee', 'A+')`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 21,
+      "metadata": {
+        "id": "qOYg1X2sJgZl",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "70612d5f-6289-4da1-8387-fc330278e18d"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "(4022, 'Jordan Lee', 'A+')\n"
+          ]
+        }
+      ],
+      "source": [
+        "# The ID is a number, so it has no quotes\n",
+        "new_patient = (4022, 'Jordan Lee', 'A+')\n",
+        "\n",
+        "print(new_patient)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "k_N2J2RIJgZl"
+      },
+      "source": [
+        "**Question 11:** Unpack `wristband` into three variables, then print a sentence about the patient.\n",
+        "\n",
+        "Expected output: `Avery Park has blood type O+`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 44,
+      "metadata": {
+        "id": "Fu0geGSXJgZl",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "97add51b-a24a-406e-e369-fa0c8493c79c"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Avery Park has blood type O+\n"
+          ]
+        }
+      ],
+      "source": [
+        "# Three names on the left, one tuple on the right\n",
+        "patient_id, name, blood_type = wristband\n",
+        "\n",
+        "print(f'{name} has blood type {blood_type}')"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "bYDQ4S-AJgZl"
+      },
+      "source": [
+        "**Question 12:** Someone wants to change the blood type on the wristband to `'A-'`. Try it and see what happens.\n",
+        "\n",
+        "After you run the cell, write the name of the error as a comment."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 43,
+      "metadata": {
+        "id": "T1sU5Sf6JgZm",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 181
+        },
+        "outputId": "5b506b8e-3021-476a-8381-cd65f19d92b7"
+      },
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "TypeError",
+          "evalue": "'tuple' object does not support item assignment",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mTypeError\u001b[0m                                 Traceback (most recent call last)",
+            "\u001b[0;32m/tmp/ipykernel_3965/67129633.py\u001b[0m in \u001b[0;36m<cell line: 0>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mwristband\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;36m2\u001b[0m\u001b[0;34m]\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m'A-'\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      2\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      3\u001b[0m \u001b[0;31m# The error I saw was: TypeError (tuple' object does not support item assignment)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mTypeError\u001b[0m: 'tuple' object does not support item assignment"
+          ]
+        }
+      ],
+      "source": [
+        "wristband[2] = 'A-'\n",
+        "\n",
+        "# The error I saw was: TypeError (tuple' object does not support item assignment)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "qoQ8nXvXJgZm"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "## Part 5: Dictionaries\n",
+        "### The Bed Board\n",
+        "\n",
+        "A dictionary stores key and value pairs. You look up a value by its key instead of a position.\n",
+        "\n",
+        "```python\n",
+        "unit = {'name': 'ER', 'beds': 12}\n",
+        "print(unit['beds'])        # 12\n",
+        "unit['beds'] = 14          # update a value\n",
+        "unit['floor'] = 1          # add a new key\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 30,
+      "metadata": {
+        "id": "7fd0957dJgZm"
+      },
+      "outputs": [],
+      "source": [
+        "# Run this cell to load the bed board\n",
+        "bed_board = {\n",
+        "    'Bed 1': 'Avery',\n",
+        "    'Bed 2': 'Jordan',\n",
+        "    'Bed 3': 'empty'\n",
+        "}"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "tvlEjjSKJgZm"
+      },
+      "source": [
+        "**Question 13:** Print the name of the patient in Bed 2.\n",
+        "\n",
+        "Expected output: `Jordan`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 31,
+      "metadata": {
+        "id": "w5Fq5iMoJgZn",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "a71e648f-6dff-4e1b-8174-a30ca507709e"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Jordan\n"
+          ]
+        }
+      ],
+      "source": [
+        "# Use the key to look up the value\n",
+        "print(bed_board['Bed 2'])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "wPTZdixsJgZn"
+      },
+      "source": [
+        "**Question 14:** Riley takes Bed 3, and a new empty bed, Bed 4, opens up. Update the first key, add the second, then print the whole dictionary.\n",
+        "\n",
+        "Expected output: `{'Bed 1': 'Avery', 'Bed 2': 'Jordan', 'Bed 3': 'Riley', 'Bed 4': 'empty'}`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 32,
+      "metadata": {
+        "id": "rjmuUDCSJgZo",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "c97ad866-7edf-4978-bb6a-e906789ed4eb"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "{'Bed 1': 'Avery', 'Bed 2': 'Jordan', 'Bed 3': 'Riley', 'Bed 4': 'empty'}\n"
+          ]
+        }
+      ],
+      "source": [
+        "# Updating a value and adding a key use the same syntax\n",
+        "bed_board['Bed 3'] = 'Riley'\n",
+        "bed_board['Bed 4'] = 'empty'\n",
+        "\n",
+        "print(bed_board)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Av16zCoZJgZp"
+      },
+      "source": [
+        "**Question 15:** Loop through `bed_board` and print each bed and its patient on its own line.\n",
+        "\n",
+        "Expected output:\n",
+        "```\n",
+        "Bed 1: Avery\n",
+        "Bed 2: Jordan\n",
+        "Bed 3: Riley\n",
+        "Bed 4: empty\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 42,
+      "metadata": {
+        "id": "nUjHRYQXJgZp"
+      },
+      "outputs": [],
+      "source": [
+        "# Run this cell to load the allergy information\n",
+        "allergies = {'penicillin', 'latex'}\n",
+        "er_notes = {'latex', 'aspirin'}"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 33,
+      "metadata": {
+        "id": "En2ehHGUJgZp",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "33b17b6e-f3ae-4ab2-92b5-72c0950d2ae3"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Bed 1: Avery\n",
+            "Bed 2: Jordan\n",
+            "Bed 3: Riley\n",
+            "Bed 4: empty\n"
+          ]
+        }
+      ],
+      "source": [
+        "# .items() gives you the key and the value on every pass\n",
+        "for bed, patient in bed_board.items():\n",
+        "    print(f'{bed}: {patient}')"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "hE_L1rs6JgZp"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "## Part 6: Sets\n",
+        "### The Allergy List\n",
+        "\n",
+        "A set does not allow duplicates, and it has no fixed order. You can compare two sets with `&` (in both) and `|` (in either).\n",
+        "\n",
+        "```python\n",
+        "a = {'x', 'y'}\n",
+        "b = {'y', 'z'}\n",
+        "print(a & b)     # {'y'}\n",
+        "print(a | b)     # {'x', 'y', 'z'}\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "JZqm7VD9JgZp"
+      },
+      "source": [
+        "**Question 16:** Add `'latex'` to `allergies` again, then print how many items the set holds. Then write what you notice as a comment.\n",
+        "\n",
+        "Expected output: `2`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "gain did not increase the lenth because sets ignore duplicate values"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 109
+        },
+        "id": "weJavIDlT-zG",
+        "outputId": "bb545d9d-836d-4732-c0da-3d6d41b4fc41"
+      },
+      "execution_count": 40,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "SyntaxError",
+          "evalue": "invalid syntax (2890530340.py, line 1)",
+          "traceback": [
+            "\u001b[0;36m  File \u001b[0;32m\"/tmp/ipykernel_3965/2890530340.py\"\u001b[0;36m, line \u001b[0;32m1\u001b[0m\n\u001b[0;31m    gain did not increase the lenth because sets ignore duplicate values\u001b[0m\n\u001b[0m         ^\u001b[0m\n\u001b[0;31mSyntaxError\u001b[0m\u001b[0;31m:\u001b[0m invalid syntax\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "qGEocQqvJgZp"
+      },
+      "outputs": [],
+      "source": [
+        "# latex is already in the set\n",
+        "allergies.add('latex')\n",
+        "\n",
+        "print(len(allergies))\n",
+        "\n",
+        "# What I noticed: Adding 'latex'did not increase the sets as they ignore duplicate value"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "a_voFkNoJgZp"
+      },
+      "source": [
+        "**Question 17:** Find the allergies that appear in **both** sets.\n",
+        "\n",
+        "Expected output: `{'latex'}`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 41,
+      "metadata": {
+        "id": "5QaSUq5TJgZp",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 163
+        },
+        "outputId": "1a459346-787e-458c-d3a7-3452a92d1eb2"
+      },
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "NameError",
+          "evalue": "name 'allergies' is not defined",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+            "\u001b[0;32m/tmp/ipykernel_3965/2801334583.py\u001b[0m in \u001b[0;36m<cell line: 0>\u001b[0;34m()\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;31m# Replace ___ with the operator for items in both sets\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m \u001b[0mprint\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mallergies\u001b[0m \u001b[0;34m&\u001b[0m \u001b[0mer_notes\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+            "\u001b[0;31mNameError\u001b[0m: name 'allergies' is not defined"
+          ]
+        }
+      ],
+      "source": [
+        "# Replace ___ with the operator for items in both sets\n",
+        "print(allergies & er_notes)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "3YzXpsgrJgZq"
+      },
+      "source": [
+        "**Question 18:** Combine both sets into one set called `everything`, then print how many items it holds.\n",
+        "\n",
+        "Expected output: `3`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "S7GX5-yQJgZq"
+      },
+      "outputs": [],
+      "source": [
+        "# Replace ___ with the operator for items in either set\n",
+        "everything = allergies ___ er_notes\n",
+        "\n",
+        "print(len(everything))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "2rW4Xw6RJgZq"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "## Part 7: Error Handling\n",
+        "### Messy Front Desk Data\n",
+        "\n",
+        "A `try` block runs risky code. If the error you named happens, Python jumps to the matching `except` block instead of crashing.\n",
+        "\n",
+        "```python\n",
+        "try:\n",
+        "    age = int('abc')\n",
+        "except ValueError:\n",
+        "    print('Not a number')\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "vhidRoSHJgZq"
+      },
+      "source": [
+        "**Question 19:** Some temperatures were typed in by hand and one is not a number. Wrap the conversion so the program skips bad entries instead of crashing.\n",
+        "\n",
+        "Expected output:\n",
+        "```\n",
+        "Recorded 98.6\n",
+        "Skipped bad entry: hot\n",
+        "Recorded 101.2\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "LaezwNXwJgZq"
+      },
+      "outputs": [],
+      "source": [
+        "entries = ['98.6', 'hot', '101.2']\n",
+        "\n",
+        "for text in entries:\n",
+        "    try:\n",
+        "        temp = float(text)\n",
+        "        print(f'Recorded {temp}')\n",
+        "    except ValueError:\n",
+        "        print(f'Skipped bad entry: {text}')"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "d8TmJYREJgZq"
+      },
+      "source": [
+        "**Question 20 (Final Challenge):** Build the shift report. This uses a list of tuples, a dictionary, a loop, error handling, and an `if` / `else` decision all at once.\n",
+        "\n",
+        "A temperature of 101 or more is `'YELLOW'`. A lower temperature is `'GREEN'`. A temperature that cannot be converted is `'RECHECK'`.\n",
+        "\n",
+        "Expected output: `{'Avery': 'YELLOW', 'Jordan': 'GREEN', 'Riley': 'RECHECK'}`"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "okplKAkDJgZq"
+      },
+      "outputs": [],
+      "source": [
+        "patients = [\n",
+        "    (4021, 'Avery', '101.4'),\n",
+        "    (4022, 'Jordan', '98.6'),\n",
+        "    (4023, 'Riley', 'n/a')\n",
+        "]\n",
+        "\n",
+        "alerts = {}\n",
+        "\n",
+        "for patient_id, name, temp_text in patients:\n",
+        "    try:\n",
+        "        temp = float(temp_text)\n",
+        "    except ValueError:\n",
+        "        alerts[name] = 'RECHECK'\n",
+        "        continue          # skip to the next patient\n",
+        "\n",
+        "    if temp >= 101:\n",
+        "        alerts[name] = 'Yellow'\n",
+        "    elsechecks additional condition only one condition is a block of code multiple times for each item:\n",
+        "        alerts[name] = 'GREEN'\n",
+        "\n",
+        "print(alerts)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "R0k9z_CjJgZq"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "## Wrap Up\n",
+        "\n",
+        "Answer the following questions as comments in the cell below."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "dA-zWDJDJgZq"
+      },
+      "outputs": [],
+      "source": [
+        "# 1. Which data structure would you use for a fixed patient wristband, and why?\n",
+        "# a couple because two poles cannot be changed in a group fields together\n",
+        "\n",
+        "# 2. Which data structure lets you look up a patient by bed number?\n",
+        "# dictionary, it can have keys numbers, labels and patient names\n",
+        "\n",
+        "# 3. Which data structure automatically prevents duplicate values?\n",
+        "# a set\n",
+        "\n",
+        "# 4. In your own words, what does elif do, and how is it different from a loop?\n",
+        "# checks additional condition only one condition is complete complete block of code multiple times for each item\n",
+        "\n",
+        "# 5. Why is it better to name the specific error in an except line?\n",
+        "# naming a specific error. Value catches only the expected failures without hiding unrelated bugs that may need attention."
+      ]
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "name": "python"
+    },
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
