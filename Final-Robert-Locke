@@ -1,0 +1,2201 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/rlocke20/python-assignment-1/blob/main/Final-Robert-Locke\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "FoCN0KNPl73v"
+      },
+      "source": [
+        "# ☕ Final Project: Build Your Own Cafe Ordering System\n",
+        "\n",
+        "---\n",
+        "\n",
+        "You are opening a cafe, and you need a program to run it. Over this project you will build a complete ordering system from scratch. A customer can see the menu, filter it by category and by allergy, add and remove items, check out with a receipt, and earn loyalty points. At the end of the day, the cafe prints a sales report.\n",
+        "\n",
+        "This is your **final project**. It uses everything you learned this term: variables, strings, `input`, `if` statements, loops, lists, tuples, dictionaries, sets, functions, and error handling.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "### How this project works\n",
+        "\n",
+        "1. Work from the top of the notebook to the bottom. Each milestone builds on the ones before it.\n",
+        "2. Every milestone has a code cell with **starter code**. Replace each `___` with your answer. Follow the `TODO` comments.\n",
+        "3. Run the cell with **Shift + Enter**.\n",
+        "4. Run the **Check your work** cell under each milestone. It prints `PASS` or `TRY AGAIN`.\n",
+        "5. Do not move on until your milestone passes.\n",
+        "6. Run cells in order. Later milestones use things you made earlier.\n",
+        "7. Plan on working over several sittings. Finish one stage at a time.\n",
+        "\n",
+        "### The five stages\n",
+        "\n",
+        "| Stage | Milestones | What you build |\n",
+        "|-------|------------|----------------|\n",
+        "| 0. Plan | | Plan your cafe before you write code |\n",
+        "| 1. The Menu | 1 to 3 | Your data, a menu display, and price lookups |\n",
+        "| 2. The Order | 4 to 8 | Adding and removing items, totals, categories, and price filters |\n",
+        "| 3. The Customer | 9 to 12 | Allergies, typed input, and loyalty points |\n",
+        "| 4. The Receipt and the Report | 13 to 14 | Receipts and a daily sales report |\n",
+        "| 5. The Whole Cafe | 15 | The main program that ties everything together |\n",
+        "| 6. Finish Strong | | Two extensions, four debugging tasks, your own tests, and written questions |\n",
+        "\n",
+        "### Points\n",
+        "\n",
+        "| Part | Points |\n",
+        "|------|--------|\n",
+        "| Plan | 4 |\n",
+        "| Milestones 1 to 15 (4 points each: 3 for the code, 1 for comments) | 60 |\n",
+        "| Extensions (pick two, 5 points each) | 10 |\n",
+        "| Debugging (4 tasks, 3 points each) | 12 |\n",
+        "| Your own tests | 2 |\n",
+        "| Written questions (5, 2 points each) | 10 |\n",
+        "| Notebook runs from top to bottom with no errors | 2 |\n",
+        "| **Total** | **100** |\n",
+        "\n",
+        "---"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "VLCMnxZyl73x"
+      },
+      "source": [
+        "### 🧰 Start here: run this cell first\n",
+        "\n",
+        "This cell creates the `check` helper that the **Check your work** cells use. Run it one time and do not change it."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "SbWXycbWl73x"
+      },
+      "outputs": [],
+      "source": [
+        "# Run this cell first. Do not change it.\n",
+        "def check(label, got, expected):\n",
+        "    if got == expected:\n",
+        "        print('PASS:', label)\n",
+        "    else:\n",
+        "        print('TRY AGAIN:', label)\n",
+        "        print('    expected:', expected)\n",
+        "        print('    got:     ', got)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "g1M8Ut1Ll73y"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "# 📝 Stage 0: Plan Your Cafe\n",
+        "\n",
+        "Good programmers plan before they code. Spend a few minutes here. You can change your plan as you go.\n",
+        "\n",
+        "**Your job:** Fill in the comments below.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Read the stage list at the top of the notebook.\n",
+        "2. For each data structure, write what your cafe will store in it.\n",
+        "3. List at least 5 functions you think you will write and what each one does.\n",
+        "4. Name one part you think will be hard, and why.\n",
+        "\n",
+        "**Grading:** 4 points for a complete plan in your own words."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "E3zdLn4El73y"
+      },
+      "outputs": [],
+      "source": [
+        "# My plan\n",
+        "#\n",
+        "# The data structures I will use, and what each one stores:\n",
+        "#   dictionary: menu item prices, category lists,  customer loyalty points\n",
+        "# item counts, and report metrics\n",
+        "#\n",
+        "#   list: active customer orders and the daily sales_log of completed orders\n",
+        "#   tuple: fixed operating hours (days, opening hour, closing hour) and tip\n",
+        "# percentage options\n",
+        "#   set: allergens for each menu item, customer allergies, and unique items\n",
+        "# during the day\n",
+        "#\n",
+        "# Five functions I think I will write, and what each one does:\n",
+        "#   1. show_menu: prints every item on the menu with its price formatted to two\n",
+        "# decimal places\n",
+        "#   2. add_to_order: adds a valid menu item to a customer's order list and\n",
+        "# returns True or False\n",
+        "#   3. order_total: calculates the total of items in order, apply sales tax,\n",
+        "# and rounds to two cents\n",
+        "#   4. allergy_check: finds which allergens a customer has in common with a\n",
+        "# specific menu item\n",
+        "#   5. print_receipt: counts duplicate items in an order, prints line totals,\n",
+        "# tax total, and cafe hours\n",
+        "#\n",
+        "# One part I think will be hard, and why:\n",
+        "# Making sure user input and edge cases don't crash the program-like handling\n",
+        "# handling invalid quantities, unknown item names, empty orders, or stay spaces\n",
+        "# and capitalization in typed text."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "qCcQYeW-l73y"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "# 🍽️ Stage 1: The Menu\n",
+        "\n",
+        "Milestones 1 to 3. You set up your data, show the menu, and look up prices."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ZXGYqk6hl73y"
+      },
+      "source": [
+        "## 🧱 Milestone 1: The Data\n",
+        "\n",
+        "Every program starts with data. In this milestone you set up everything your cafe needs to remember.\n",
+        "\n",
+        "**Your job:** Create the variables below.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. `cafe_name` is a string. Type any name you like for your cafe.\n",
+        "2. `menu` is a **dictionary**. Each key is an item name and each value is a price. Fill in the Bagel price (`2.50`), the missing item name (`'Cookie'`), and the Iced Tea price (`3.00`).\n",
+        "3. `hours` is a **tuple**. A tuple holds values that never change. Fill in the opening hour `7` and the closing hour `18`.\n",
+        "4. `allergens` is a dictionary where each value is a **set** of allergens. Fill in `'wheat'` for the Cookie and an empty set for the Iced Tea. An empty set is written `set()`.\n",
+        "5. `order` and `sales_log` are empty **lists**. Write `[]` for each.\n",
+        "6. `customers` is already written. It is a dictionary of loyalty points.\n",
+        "\n",
+        "**Expected result:** The Check your work cell prints `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 2,
+      "metadata": {
+        "id": "O8aHSQaWl73y"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO 1: Pick a name for your cafe.\n",
+        "cafe_name = 'Coffe Coffe'\n",
+        "\n",
+        "# TODO 2: Fill in the Bagel price, the missing item name, and the Iced Tea price.\n",
+        "menu = {\n",
+        "    'Latte': 4.50,\n",
+        "    'Muffin': 3.25,\n",
+        "    'Bagel': 2.50,\n",
+        "    'Drip Coffee': 2.75,\n",
+        "    'cookie': 1.75,\n",
+        "    'Iced Tea': 3.00\n",
+        "}\n",
+        "\n",
+        "# TODO 3: Fill in the opening hour and the closing hour.\n",
+        "# The tuple is (days, opening hour, closing hour).\n",
+        "hours = ('Mon-Fri', 7, 18)\n",
+        "\n",
+        "# TODO 4: Fill in the missing allergen for the Cookie and the Iced Tea.\n",
+        "allergens = {\n",
+        "    'Latte': {'milk'},\n",
+        "    'Muffin': {'wheat', 'egg'},\n",
+        "    'Bagel': {'wheat'},\n",
+        "    'Drip Coffee': set(),\n",
+        "    'Cookie': {'wheat', 'egg', 'milk'},\n",
+        "    'Iced Tea': set()\n",
+        "}\n",
+        "\n",
+        "# TODO 5: Create two empty lists.\n",
+        "order = []\n",
+        "sales_log = []\n",
+        "\n",
+        "# Already written for you: loyalty points for returning customers.\n",
+        "customers = {'Ana': 120, 'Ben': 40}"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "TTIkXnrKl73y"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "v_fsdk5Dl73z"
+      },
+      "outputs": [],
+      "source": [
+        "check('cafe name is text', type(cafe_name), str)\n",
+        "check('cafe name is not blank', len(cafe_name) > 0 and cafe_name != '___', True)\n",
+        "check('menu has 6 items', len(menu), 6)\n",
+        "check('bagel price', menu['Bagel'], 2.5)\n",
+        "check('iced tea price', menu['Iced Tea'], 3.0)\n",
+        "check('cookie is on the menu', 'Cookie' in menu, True)\n",
+        "check('hours is a tuple', type(hours), tuple)\n",
+        "check('opening hour', hours[1], 7)\n",
+        "check('closing hour', hours[2], 18)\n",
+        "check('cookie allergens', allergens['Cookie'], {'wheat', 'egg', 'milk'})\n",
+        "check('iced tea has no allergens', allergens['Iced Tea'], set())\n",
+        "check('order is an empty list', order, [])\n",
+        "check('sales log is an empty list', sales_log, [])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "uhQVnFukl73z"
+      },
+      "source": [
+        "## 📋 Milestone 2: Show the Menu\n",
+        "\n",
+        "**Your job:** Write a function named `show_menu` that prints every item and its price.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Loop over the dictionary with `.items()`. It gives you each key and value.\n",
+        "2. Print each line with an f-string.\n",
+        "3. `:.2f` after `price` shows a number with exactly 2 decimal places.\n",
+        "4. Write a short comment above the function that says what it does.\n",
+        "\n",
+        "**Expected output:**\n",
+        "```\n",
+        "--- MENU ---\n",
+        "Latte: $4.50\n",
+        "Muffin: $3.25\n",
+        "Bagel: $2.50\n",
+        "Drip Coffee: $2.75\n",
+        "Cookie: $1.75\n",
+        "Iced Tea: $3.00\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 3,
+      "metadata": {
+        "id": "dGxWWi_Rl73z",
+        "outputId": "fdcef557-947b-4c39-eecb-6b86bfdeeec8",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "--- MENU ---\n",
+            "Latte: $4.50\n",
+            "Muffin: $3.25\n",
+            "Bagel: $2.50\n",
+            "Drip Coffee: $2.75\n",
+            "cookie: $1.75\n",
+            "Iced Tea: $3.00\n"
+          ]
+        }
+      ],
+      "source": [
+        "# TODO: Write a comment here that says what show_menu does.\n",
+        "# print the things in the menu dictionary with its formatted price.\n",
+        "def show_menu(menu):\n",
+        "    print('--- MENU ---')\n",
+        "    for item, price in menu.items():\n",
+        "        print(f'{item}: ${price:.2f}')\n",
+        "\n",
+        "show_menu(menu)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "h5JnYh8fl73z"
+      },
+      "source": [
+        "## 🔍 Milestone 3: Look Up a Price\n",
+        "\n",
+        "**Your job:** Write a function named `get_price` that returns the price of an item. If the item is not on the menu, it returns `None` instead of crashing.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Inside `try`, return the price from the dictionary: `menu[item]`.\n",
+        "2. Asking for a key that does not exist causes a `KeyError`. Catch that error in the `except` line.\n",
+        "3. In the `except` block, return `None`.\n",
+        "4. Write a comment above the function.\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 5,
+      "metadata": {
+        "id": "Ts2GQJg2l73z"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Write a comment here that says what get_price does.\n",
+        "# replace the price of item or none if the item is missing.\n",
+        "def get_price(menu, item):\n",
+        "    try:\n",
+        "        return menu[item]\n",
+        "    except KeyError:\n",
+        "        return None"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "2BjrR03hl73z"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 6,
+      "metadata": {
+        "id": "7ZuDBMFdl73z",
+        "outputId": "50bd37e5-baa0-4d88-f825-d7330201522b",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PASS: price of a latte\n",
+            "TRY AGAIN: price of a cookie\n",
+            "    expected: 1.75\n",
+            "    got:      None\n",
+            "PASS: an item that is not on the menu\n"
+          ]
+        }
+      ],
+      "source": [
+        "check('price of a latte', get_price(menu, 'Latte'), 4.5)\n",
+        "check('price of a cookie', get_price(menu, 'Cookie'), 1.75)\n",
+        "check('an item that is not on the menu', get_price(menu, 'Pizza'), None)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "WV2mCkmAl73z"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "# 🛒 Stage 2: The Order\n",
+        "\n",
+        "Milestones 4 to 8. A customer builds an order, changes their mind, and sees what they owe."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ARMAQoExl73z"
+      },
+      "source": [
+        "## ➕ Milestone 4: Add an Item to the Order\n",
+        "\n",
+        "**Your job:** Write a function named `add_to_order` that adds an item to the order list, but only if the item is on the menu.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Check whether the item is **in** the menu. Use the word `in`.\n",
+        "2. If it is, add it to the list with `append`, and return `True`.\n",
+        "3. If it is not, return `False`.\n",
+        "4. Write a comment above the function.\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 8,
+      "metadata": {
+        "id": "ZK_EO_AXl730"
+      },
+      "outputs": [],
+      "source": [
+        "from os import truncate\n",
+        "# TODO: Write a comment here that says what add_to_order does.\n",
+        "def add_to_order(order, menu, item):\n",
+        "    if item in menu:\n",
+        "        order.append(item)\n",
+        "        return truncate\n",
+        "    else:\n",
+        "        return False"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "EaN0URUsl730"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 9,
+      "metadata": {
+        "id": "GzyFHnbWl730",
+        "outputId": "24258ef7-32b7-414e-e45c-ed591ffc29be",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "TRY AGAIN: adds a real item\n",
+            "    expected: True\n",
+            "    got:      <built-in function truncate>\n",
+            "PASS: the latte is in the list\n",
+            "PASS: rejects an item that is not on the menu\n",
+            "PASS: the list did not change\n"
+          ]
+        }
+      ],
+      "source": [
+        "test_order = []\n",
+        "check('adds a real item', add_to_order(test_order, menu, 'Latte'), True)\n",
+        "check('the latte is in the list', test_order, ['Latte'])\n",
+        "check('rejects an item that is not on the menu', add_to_order(test_order, menu, 'Pizza'), False)\n",
+        "check('the list did not change', test_order, ['Latte'])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "TtTnNqxKl730"
+      },
+      "source": [
+        "## ➖ Milestone 5: Remove an Item from the Order\n",
+        "\n",
+        "Customers change their minds. Let them take an item back off.\n",
+        "\n",
+        "**Your job:** Write a function named `remove_from_order` that removes **one** copy of an item from the order. It returns `True` if it removed something and `False` if the item was not in the order.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Check whether the item is **in** the order list.\n",
+        "2. If it is, remove it with the list method `.remove(item)`, and return `True`. The method `.remove` removes only the first match.\n",
+        "3. If it is not, return `False`.\n",
+        "4. Write a comment above the function.\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 10,
+      "metadata": {
+        "id": "qXd9znP8l730"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Write a comment here that says what remove_from_order does.\n",
+        "def remove_from_order(order, item):\n",
+        "    if item in order:\n",
+        "        order.remove(item)\n",
+        "        return True\n",
+        "    else:\n",
+        "        return False"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "C0TNYdUtl730"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 11,
+      "metadata": {
+        "id": "uKR5XfSEl730",
+        "outputId": "188167bc-c0a9-4f48-f6b3-5301a42509d4",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PASS: removes an item in the order\n",
+            "PASS: only one latte was removed\n",
+            "PASS: an item that is not in the order\n",
+            "PASS: the list did not change\n"
+          ]
+        }
+      ],
+      "source": [
+        "test_order = ['Latte', 'Muffin', 'Latte']\n",
+        "check('removes an item in the order', remove_from_order(test_order, 'Latte'), True)\n",
+        "check('only one latte was removed', test_order, ['Muffin', 'Latte'])\n",
+        "check('an item that is not in the order', remove_from_order(test_order, 'Pizza'), False)\n",
+        "check('the list did not change', test_order, ['Muffin', 'Latte'])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Wlcl0fAUl730"
+      },
+      "source": [
+        "## 💵 Milestone 6: Work Out the Total\n",
+        "\n",
+        "**Your job:** Write a function named `order_total` that adds up the prices of every item in the order, then adds sales tax.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Give `tax_rate` a **default value** of `0.08`.\n",
+        "2. Loop over the `order` list.\n",
+        "3. Use `get_price(menu, item)` to get each price. Add it to `subtotal` with `+=`.\n",
+        "4. The line `total = subtotal * (1 + tax_rate)` adds the tax. It is already written.\n",
+        "5. Return the total rounded to 2 decimal places. The `round` line is already written.\n",
+        "6. Write a comment above the function.\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 13,
+      "metadata": {
+        "id": "G2wPnKs5l731"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Write a comment here that says what order_total does.\n",
+        "def order_total(order, menu, tax_rate=0.08):\n",
+        "    subtotal = 0\n",
+        "    for item in order:\n",
+        "        subtotal += get_price(menu, item)\n",
+        "    total = subtotal * (1 + tax_rate)\n",
+        "    return round(total, 2)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "8UyDhmp7l731"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 14,
+      "metadata": {
+        "id": "s0Yoz7-Dl731",
+        "outputId": "049451f4-0ff5-4137-d476-c40c9db4c34b",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PASS: latte and muffin with tax\n",
+            "PASS: latte and muffin with no tax\n",
+            "PASS: an empty order\n"
+          ]
+        }
+      ],
+      "source": [
+        "check('latte and muffin with tax', order_total(['Latte', 'Muffin'], menu), 8.37)\n",
+        "check('latte and muffin with no tax', order_total(['Latte', 'Muffin'], menu, 0), 7.75)\n",
+        "check('an empty order', order_total([], menu), 0)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "48LzUFvDl731"
+      },
+      "source": [
+        "## 🗂️ Milestone 7: Menu Categories\n",
+        "\n",
+        "A big menu is easier to read in sections. A dictionary can hold **lists**.\n",
+        "\n",
+        "### Part A: The data\n",
+        "\n",
+        "**Your job:** Finish the `categories` dictionary. Each key is a category name and each value is a list of item names. Fill in the missing food item, `'Muffin'`.\n",
+        "\n",
+        "### Part B: items_in_category\n",
+        "\n",
+        "**Your job:** Write a function that returns the list of items for a category. If the category does not exist, it returns an empty list.\n",
+        "\n",
+        "**Steps:** Use the dictionary method `.get(name, [])`. It returns the value for the key, or `[]` if the key is missing.\n",
+        "\n",
+        "### Part C: show_menu_by_category\n",
+        "\n",
+        "**Your job:** Print each category as a heading, then each item under it with its price.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Loop over `categories.items()`. Each pass gives a category name and its list of items.\n",
+        "2. Inside that loop, loop over the list of items.\n",
+        "3. Look up each price with `menu[item]`.\n",
+        "\n",
+        "**Expected output:**\n",
+        "```\n",
+        "--- Drinks ---\n",
+        "Latte: $4.50\n",
+        "Drip Coffee: $2.75\n",
+        "Iced Tea: $3.00\n",
+        "--- Food ---\n",
+        "Muffin: $3.25\n",
+        "Bagel: $2.50\n",
+        "Cookie: $1.75\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "nZTUAZqkl731"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Fill in the missing food item.\n",
+        "categories = {\n",
+        "    'Drinks': ['Latte', 'Drip Coffee', 'Iced Tea'],\n",
+        "    'Food': ['Muffin', 'Bagel', 'Cookie']\n",
+        "}\n",
+        "\n",
+        "# TODO: Write a comment here that says what items_in_category does.\n",
+        "def items_in_category(categories, name):\n",
+        "    return categories.get(name, [])\n",
+        "\n",
+        "# TODO: Write a comment here that says what show_menu_by_category does.\n",
+        "def show_menu_by_category(menu, categories):\n",
+        "    for category, items in categories.items():\n",
+        "        print(f'--- {category} ---')\n",
+        "        for item in items:\n",
+        "            print(f'{item}: ${menu[item]:.2f}')\n",
+        "\n",
+        "show_menu_by_category(menu, categories)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "59Fp29Zsl731"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "_ie4-YhRl731"
+      },
+      "outputs": [],
+      "source": [
+        "check('food items', categories['Food'], ['Muffin', 'Bagel', 'Cookie'])\n",
+        "check('items in Drinks', items_in_category(categories, 'Drinks'), ['Latte', 'Drip Coffee', 'Iced Tea'])\n",
+        "check('a category that does not exist', items_in_category(categories, 'Soup'), [])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "BKL-wfWdl731"
+      },
+      "source": [
+        "## 🏷️ Milestone 8: Find Items Under a Price\n",
+        "\n",
+        "**Your job:** Write a function named `items_under` that returns a list of item names that cost the limit **or less**.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Start with an empty list named `result`.\n",
+        "2. Loop over `menu.items()`.\n",
+        "3. If the price is less than or equal to `limit`, add the **item name** to `result`. Use `<=`.\n",
+        "4. Return `result` after the loop.\n",
+        "5. Write a comment above the function.\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 16,
+      "metadata": {
+        "id": "GVjSf3Cnl731"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Write a comment here that says what items_under does.\n",
+        "def items_under(menu, limit):\n",
+        "    result = []\n",
+        "    for item, price in menu.items():\n",
+        "        if price <= limit:\n",
+        "            result.append(item)\n",
+        "    return result"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "rn1ZqmZ0l732"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 18,
+      "metadata": {
+        "id": "91t_WeI7l732",
+        "outputId": "02bcaaf5-d7c8-4805-cf3d-b0188fda7df3",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "TRY AGAIN: items for 3 dollars or less\n",
+            "    expected: ['Bagel', 'Drip Coffee', 'Cookie', 'Iced Tea']\n",
+            "    got:      ['Bagel', 'Drip Coffee', 'cookie', 'Iced Tea']\n",
+            "TRY AGAIN: items for 2 dollars or less\n",
+            "    expected: ['Cookie']\n",
+            "    got:      ['cookie']\n",
+            "PASS: nothing is that cheap\n"
+          ]
+        }
+      ],
+      "source": [
+        "check('items for 3 dollars or less', items_under(menu, 3.00), ['Bagel', 'Drip Coffee', 'Cookie', 'Iced Tea'])\n",
+        "check('items for 2 dollars or less', items_under(menu, 2.00), ['Cookie'])\n",
+        "check('nothing is that cheap', items_under(menu, 1.00), [])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "wZUnlmibl733"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "# 🧑‍🤝‍🧑 Stage 3: The Customer\n",
+        "\n",
+        "Milestones 9 to 12. Your cafe looks after allergies, messy typing, and loyal customers."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "OMi7ns8tl733"
+      },
+      "source": [
+        "## 🥜 Milestone 9: Check for Allergies\n",
+        "\n",
+        "**Your job:** Write a function named `allergy_check` that tells a customer which of their allergens are in an item.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. `allergens[item]` is the set of allergens in that item.\n",
+        "2. `my_allergies` is a set of the customer's allergies, like `{'egg'}`.\n",
+        "3. Use the set operator `&`. It returns only the values that are in **both** sets.\n",
+        "4. Return the result.\n",
+        "5. Write a comment above the function.\n",
+        "\n",
+        "**Example:** A muffin has wheat and egg. A customer who is allergic to egg gets `{'egg'}` back.\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 19,
+      "metadata": {
+        "id": "vCo0jVowl734"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Write a comment here that says what allergy_check does.\n",
+        "def allergy_check(item, my_allergies):\n",
+        "    return allergens[item] & my_allergies"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "4d267_78l735"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 20,
+      "metadata": {
+        "id": "8izcqS8Ol735",
+        "outputId": "bd6d7635-ce7f-42c6-e315-3ecd40806e8b",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PASS: muffin and egg allergy\n",
+            "PASS: latte and wheat allergy\n",
+            "PASS: cookie and several allergies\n"
+          ]
+        }
+      ],
+      "source": [
+        "check('muffin and egg allergy', allergy_check('Muffin', {'egg'}), {'egg'})\n",
+        "check('latte and wheat allergy', allergy_check('Latte', {'wheat'}), set())\n",
+        "check('cookie and several allergies', allergy_check('Cookie', {'milk', 'wheat', 'nuts'}), {'milk', 'wheat'})"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "idcU4gSel735"
+      },
+      "source": [
+        "## ✅ Milestone 10: Allergy-Safe Items\n",
+        "\n",
+        "**Your job:** Write a function named `safe_items` that returns a list of every menu item with **none** of the customer's allergens. It uses the function you just wrote.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Start with an empty list named `safe`.\n",
+        "2. Loop over the menu. Looping over a dictionary gives you its keys, which are the item names.\n",
+        "3. Call `allergy_check(item, my_allergies)`. If the length of the result is `0`, the item is safe. Use `len(...)`.\n",
+        "4. Add safe items to `safe` and return it.\n",
+        "5. Write a comment above the function.\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 21,
+      "metadata": {
+        "id": "HSVLOurQl735"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Write a comment here that says what safe_items does.\n",
+        "def safe_items(menu, my_allergies):\n",
+        "    safe = []\n",
+        "    for item in menu:\n",
+        "        if len(allergy_check(item, my_allergies)) == 0:\n",
+        "            safe.append(item)\n",
+        "    return safe"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "TFnwJXU2l735"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "ZKHHnUa5l735"
+      },
+      "outputs": [],
+      "source": [
+        "check('safe without wheat', safe_items(menu, {'wheat'}), ['Latte', 'Drip Coffee', 'Iced Tea'])\n",
+        "check('safe without milk or wheat', safe_items(menu, {'milk', 'wheat'}), ['Drip Coffee', 'Iced Tea'])\n",
+        "check('no allergies', safe_items(menu, set()), list(menu))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "iSImNU8Al735"
+      },
+      "source": [
+        "## ⌨️ Milestone 11: Read What the Customer Types\n",
+        "\n",
+        "People type in messy ways. They add extra spaces, use the wrong capital letters, or type words instead of numbers. In this milestone you clean up what they type.\n",
+        "\n",
+        "### Part A: Clean the name\n",
+        "\n",
+        "**Your job:** Write a function named `clean_name` that turns `'  drip coffee '` into `'Drip Coffee'`.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Use the string method `.strip()` to remove spaces from both ends.\n",
+        "2. Use the string method `.title()` to capitalize each word.\n",
+        "3. Chain them together: `text.strip().title()`.\n",
+        "\n",
+        "### Part B: Check the quantity\n",
+        "\n",
+        "**Your job:** Write a function named `parse_quantity`. It takes text and returns a whole number greater than 0. If the text is not a valid quantity, it returns `None`.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. In `try`, convert the text with `int(text)`.\n",
+        "2. If the text is not a whole number, `int` raises a `ValueError`. Catch it and return `None`.\n",
+        "3. After the `try`, return the number if it is greater than 0. Otherwise return `None`.\n",
+        "\n",
+        "### Part C: Keep asking\n",
+        "\n",
+        "**Your job:** Finish `ask_quantity`. It keeps asking until the customer types a valid quantity.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Fill in the blank with the words `is not`.\n",
+        "2. Run the cell, then run `ask_quantity()` in a new cell. Try typing `two`, then `0`, then `3`.\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 22,
+      "metadata": {
+        "id": "N_BglMNHl735"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Write a comment here that says what clean_name does.\n",
+        "def clean_name(text):\n",
+        "    return text.strip().title()\n",
+        "\n",
+        "# TODO: Write a comment here that says what parse_quantity does.\n",
+        "def parse_quantity(text):\n",
+        "    try:\n",
+        "        number = int(text)\n",
+        "    except ValueError:\n",
+        "        return None\n",
+        "    if number > 0:\n",
+        "        return number\n",
+        "    else:\n",
+        "        return None\n",
+        "\n",
+        "# TODO: Write a comment here that says what ask_quantity does.\n",
+        "def ask_quantity():\n",
+        "    while True:\n",
+        "        text = input('How many? ')\n",
+        "        quantity = parse_quantity(text)\n",
+        "        if quantity is not None:\n",
+        "            return quantity\n",
+        "        print('Please type a whole number greater than 0.')"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "1FPBhzf9l735"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 24,
+      "metadata": {
+        "id": "xn4MAZ14l735",
+        "outputId": "4c393bcf-3647-4f32-a962-007fea0137c9",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PASS: extra spaces and lowercase\n",
+            "PASS: two words\n",
+            "PASS: a valid quantity\n",
+            "PASS: words are not a quantity\n",
+            "PASS: zero is not a quantity\n",
+            "PASS: negative is not a quantity\n"
+          ]
+        }
+      ],
+      "source": [
+        "check('extra spaces and lowercase', clean_name('  latte '), 'Latte')\n",
+        "check('two words', clean_name('drip coffee'), 'Drip Coffee')\n",
+        "check('a valid quantity', parse_quantity('3'), 3)\n",
+        "check('words are not a quantity', parse_quantity('two'), None)\n",
+        "check('zero is not a quantity', parse_quantity('0'), None)\n",
+        "check('negative is not a quantity', parse_quantity('-2'), None)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "jxR3sbRfl735"
+      },
+      "source": [
+        "## ⭐ Milestone 12: Loyalty Points\n",
+        "\n",
+        "Customers earn **1 point for every whole dollar** they spend. A 13.23 dollar order earns 13 points. The `customers` dictionary stores each customer's points.\n",
+        "\n",
+        "### Part A: add_points\n",
+        "\n",
+        "**Your job:** Write a function named `add_points` that adds points to a customer and returns their new total. New customers are added to the dictionary.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Turn the total into whole points with `int(total)`. `int` drops the cents.\n",
+        "2. If the name is **in** `customers`, add the points with `+=`.\n",
+        "3. Otherwise, create the customer and set their points.\n",
+        "4. Return that customer's points.\n",
+        "\n",
+        "### Part B: get_tier\n",
+        "\n",
+        "**Your job:** Write a function named `get_tier` that returns a tier name from a points total.\n",
+        "\n",
+        "- 200 points or more: `'Gold'`\n",
+        "- 100 points or more: `'Silver'`\n",
+        "- Anything less: `'Bronze'`\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 27,
+      "metadata": {
+        "id": "3PL-eTUIl735"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Write a comment here that says what add_points does.\n",
+        "def add_points(customers, name, total):\n",
+        "    points = int(total)\n",
+        "    if name in customers:\n",
+        "        customers[name] += points\n",
+        "    else:\n",
+        "        customers[name] = points\n",
+        "    return customers[name]\n",
+        "\n",
+        "# TODO: Write a comment here that says what get_tier does.\n",
+        "def get_tier(points):\n",
+        "    if points >= 200:\n",
+        "        return 'Gold'\n",
+        "    elif points >= 100:\n",
+        "        return 'Silver'\n",
+        "    else:\n",
+        "        return 'Bronze'"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "rjS9KwDel736"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "M3An5c2Fl736"
+      },
+      "outputs": [],
+      "source": [
+        "test_customers = {'Ana': 120}\n",
+        "check('a returning customer', add_points(test_customers, 'Ana', 9.99), 129)\n",
+        "check('a new customer', add_points(test_customers, 'Cy', 13.23), 13)\n",
+        "check('the dictionary was updated', test_customers, {'Ana': 129, 'Cy': 13})\n",
+        "check('gold tier', get_tier(250), 'Gold')\n",
+        "check('silver tier', get_tier(150), 'Silver')\n",
+        "check('bronze tier', get_tier(50), 'Bronze')\n",
+        "check('exactly 200 is gold', get_tier(200), 'Gold')\n",
+        "check('exactly 100 is silver', get_tier(100), 'Silver')"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "BsASqCQUl736"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "# 🧾 Stage 4: The Receipt and the Report\n",
+        "\n",
+        "Milestones 13 and 14. The cafe prints receipts for customers and a report for the owner."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Xyd9oPmDl736"
+      },
+      "source": [
+        "## 🧾 Milestone 13: Print a Receipt\n",
+        "\n",
+        "### Part A: Count the items\n",
+        "\n",
+        "**Your job:** Write a function named `count_items` that turns an order list into a dictionary of counts. For example, `['Latte', 'Muffin', 'Latte']` becomes `{'Latte': 2, 'Muffin': 1}`.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Start with an empty dictionary named `counts`.\n",
+        "2. Loop over the order.\n",
+        "3. If the item is already a key, add 1 to its count with `+=`.\n",
+        "4. Otherwise, set its count to `1`.\n",
+        "5. Return `counts`.\n",
+        "\n",
+        "### Part B: Print the receipt\n",
+        "\n",
+        "**Your job:** Finish `print_receipt`. It uses `count_items` and `order_total`.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Fill in `.items()` to loop over the counts.\n",
+        "2. The line `days, open_hour, close_hour = hours` **unpacks** the tuple into three variables. Fill in the missing name.\n",
+        "3. Fill in the missing parts of the f-strings.\n",
+        "\n",
+        "**Expected output for the test call at the bottom:**\n",
+        "```\n",
+        "--- RECEIPT ---\n",
+        "2 x Latte: $9.00\n",
+        "1 x Muffin: $3.25\n",
+        "Total with tax: $13.23\n",
+        "Open Mon-Fri, 7 to 18\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 28,
+      "metadata": {
+        "id": "XqvkFqT3l736",
+        "outputId": "d7e5cd40-30d2-4ad0-ef14-a569e52352d9",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "--- RECEIPT ---\n",
+            "2 x Latte: $9.00\n",
+            "1 x Muffin: $3.25\n",
+            "Total with tax: $13.23\n",
+            "Open Mon-Fri, 7 to 18\n"
+          ]
+        }
+      ],
+      "source": [
+        "# TODO: Write a comment here that says what count_items does.\n",
+        "def count_items(order):\n",
+        "    counts = {}\n",
+        "    for item in order:\n",
+        "        if item in counts:\n",
+        "            counts[item] += 1\n",
+        "        else:\n",
+        "            counts[item] = 1\n",
+        "    return counts\n",
+        "\n",
+        "# TODO: Write a comment here that says what print_receipt does.\n",
+        "def print_receipt(order, menu):\n",
+        "    print('--- RECEIPT ---')\n",
+        "    counts = count_items(order)\n",
+        "    for item, quantity in counts.items():\n",
+        "        line_total = get_price(menu, item) * quantity\n",
+        "        print(f'{quantity} x {item}: ${line_total:.2f}')\n",
+        "    print(f'Total with tax: ${order_total(order, menu):.2f}')\n",
+        "    days, open_hour, close_hour = hours\n",
+        "    print(f'Open {days}, {open_hour} to {close_hour}')\n",
+        "\n",
+        "print_receipt(['Latte', 'Muffin', 'Latte'], menu)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "xV8-1CCzl736"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 29,
+      "metadata": {
+        "id": "ABKj8H_1l736",
+        "outputId": "397d727d-1818-4219-8193-8b3f560bb6a0",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PASS: count a mixed order\n",
+            "PASS: count an empty order\n"
+          ]
+        }
+      ],
+      "source": [
+        "check('count a mixed order', count_items(['Latte', 'Muffin', 'Latte']), {'Latte': 2, 'Muffin': 1})\n",
+        "check('count an empty order', count_items([]), {})"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "3HtNX8HLl736"
+      },
+      "source": [
+        "## 📊 Milestone 14: The Daily Sales Report\n",
+        "\n",
+        "At closing time, the owner wants a report. The `sales_log` list holds every finished order, and each order is itself a list of items.\n",
+        "\n",
+        "### Part A: daily_report\n",
+        "\n",
+        "**Your job:** Write a function named `daily_report` that returns a dictionary with four numbers about the day.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Loop over `sales_log`. Each `sale` is one order.\n",
+        "2. Add the number of items in the sale to `items_sold` with `len(sale)`.\n",
+        "3. Add the sale's total to `revenue` using `order_total(sale, menu)`.\n",
+        "4. Loop over the items in the sale and add each one to the set `unique`. Use the set method `.add`.\n",
+        "5. Return a dictionary with the keys `'orders'`, `'items'`, `'revenue'`, and `'unique_items'`.\n",
+        "\n",
+        "### Part B: print_report\n",
+        "\n",
+        "**Your job:** Finish `print_report`. Fill in the last key, `'unique_items'`.\n",
+        "\n",
+        "**Expected output for the test call at the bottom:**\n",
+        "```\n",
+        "--- DAILY REPORT ---\n",
+        "Orders: 3\n",
+        "Items sold: 4\n",
+        "Revenue: $15.12\n",
+        "Different items sold: 3\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 32,
+      "metadata": {
+        "id": "p8MVj1Aol736",
+        "outputId": "ec72f864-ff57-4adc-99cb-12395492e514",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 331
+        }
+      },
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "TypeError",
+          "evalue": "unsupported operand type(s) for +=: 'int' and 'NoneType'",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mTypeError\u001b[0m                                 Traceback (most recent call last)",
+            "\u001b[0;32m/tmp/ipykernel_4170/2009751597.py\u001b[0m in \u001b[0;36m<cell line: 0>\u001b[0;34m()\u001b[0m\n\u001b[1;32m     26\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     27\u001b[0m \u001b[0mtest_log\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m'Latte'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'Muffin'\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0;34m'Cookie'\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0;34m'Latte'\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 28\u001b[0;31m \u001b[0mprint_report\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mdaily_report\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtest_log\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmenu\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+            "\u001b[0;32m/tmp/ipykernel_4170/2009751597.py\u001b[0m in \u001b[0;36mdaily_report\u001b[0;34m(sales_log, menu)\u001b[0m\n\u001b[1;32m      6\u001b[0m     \u001b[0;32mfor\u001b[0m \u001b[0msale\u001b[0m \u001b[0;32min\u001b[0m \u001b[0msales_log\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      7\u001b[0m         \u001b[0mitems_sold\u001b[0m \u001b[0;34m+=\u001b[0m \u001b[0mlen\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0msale\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 8\u001b[0;31m         \u001b[0mrevenue\u001b[0m \u001b[0;34m+=\u001b[0m \u001b[0morder_total\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0msale\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmenu\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      9\u001b[0m         \u001b[0;32mfor\u001b[0m \u001b[0mitem\u001b[0m \u001b[0;32min\u001b[0m \u001b[0msale\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     10\u001b[0m             \u001b[0munique\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0madd\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mitem\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/tmp/ipykernel_4170/915679328.py\u001b[0m in \u001b[0;36morder_total\u001b[0;34m(order, menu, tax_rate)\u001b[0m\n\u001b[1;32m      3\u001b[0m     \u001b[0msubtotal\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;36m0\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m     \u001b[0;32mfor\u001b[0m \u001b[0mitem\u001b[0m \u001b[0;32min\u001b[0m \u001b[0morder\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 5\u001b[0;31m         \u001b[0msubtotal\u001b[0m \u001b[0;34m+=\u001b[0m \u001b[0mget_price\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mmenu\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mitem\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      6\u001b[0m     \u001b[0mtotal\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0msubtotal\u001b[0m \u001b[0;34m*\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0;36m1\u001b[0m \u001b[0;34m+\u001b[0m \u001b[0mtax_rate\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      7\u001b[0m     \u001b[0;32mreturn\u001b[0m \u001b[0mround\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtotal\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;36m2\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mTypeError\u001b[0m: unsupported operand type(s) for +=: 'int' and 'NoneType'"
+          ]
+        }
+      ],
+      "source": [
+        "# TODO: Write a comment here that says what daily_report does.\n",
+        "def daily_report(sales_log, menu):\n",
+        "    items_sold = 0\n",
+        "    revenue = 0\n",
+        "    unique = set()\n",
+        "    for sale in sales_log:\n",
+        "        items_sold += len(sale)\n",
+        "        revenue += order_total(sale, menu)\n",
+        "        for item in sale:\n",
+        "            unique.add(item)\n",
+        "    return {\n",
+        "        'orders': len(sale_log),\n",
+        "        'items': items_sold,\n",
+        "        'revenue': round(revenue, 2),\n",
+        "        'unique_items': unique\n",
+        "    }\n",
+        "\n",
+        "# TODO: Write a comment here that says what print_report does.\n",
+        "def print_report(report):\n",
+        "    print('--- DAILY REPORT ---')\n",
+        "    print('Orders:', report['orders'])\n",
+        "    print('Items sold:', report['items'])\n",
+        "    revenue = report['revenue']\n",
+        "    print(f'Revenue: ${revenue:.2f}')\n",
+        "    print('Different items sold:', len(report['___']))\n",
+        "\n",
+        "test_log = [['Latte', 'Muffin'], ['Cookie'], ['Latte']]\n",
+        "print_report(daily_report(test_log, menu))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "fAVBgoh0l736"
+      },
+      "source": [
+        "**Check your work:**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "wXjMMDVNl736"
+      },
+      "outputs": [],
+      "source": [
+        "check('a day with three orders', daily_report(test_log, menu), {'orders': 3, 'items': 4, 'revenue': 15.12, 'unique_items': {'Latte', 'Muffin', 'Cookie'}})\n",
+        "check('a day with no orders', daily_report([], menu), {'orders': 0, 'items': 0, 'revenue': 0, 'unique_items': set()})"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Ka0NPP50l736"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "# 🏁 Stage 5: The Whole Cafe\n",
+        "\n",
+        "Milestone 15. Everything you built comes together in one program."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "U-9VjT5Kl736"
+      },
+      "source": [
+        "## 🏁 Milestone 15: The Main Program\n",
+        "\n",
+        "`run_cafe` is the program a customer uses. It asks for a name, shows a menu of choices, reads what the customer types, and calls the functions you built. When the customer quits, it prints the daily report.\n",
+        "\n",
+        "**Your job:** Finish the `run_cafe` function.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. In choice 3, check whether the price lookup gives back `None`. Use `is None`.\n",
+        "2. Use `quantity` in `range(...)` to add the item that many times.\n",
+        "3. In choice 4, pass the item `name` to `remove_from_order`.\n",
+        "4. In choice 6, `.split(',')` cuts the typed text at each comma into a list. Fill in the comma.\n",
+        "5. In choice 7, after checkout the order is reset to a new empty list. Write `[]`.\n",
+        "6. For the last choice, the customer types `'8'` to quit.\n",
+        "7. Write a comment above the function.\n",
+        "8. Run the cell. Then run `run_cafe()` in a new cell and try every choice.\n",
+        "\n",
+        "**Try this sample run:**\n",
+        "1. Type your name when it asks.\n",
+        "2. Choose `1`, then `2`, to see both menus.\n",
+        "3. Choose `3`, type `latte`, then type `2`.\n",
+        "4. Choose `3`, type `pizza`. You should see the sorry message.\n",
+        "5. Choose `4`, type `latte`, to remove one.\n",
+        "6. Choose `5` to see your order.\n",
+        "7. Choose `6`, type `wheat, egg`, to see the allergy-safe items.\n",
+        "8. Choose `7` to check out and see your receipt and loyalty tier.\n",
+        "9. Choose `8` to quit and see the daily report."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 33,
+      "metadata": {
+        "id": "Lc93sclsl736"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Write a comment here that says what run_cafe does.\n",
+        "def run_cafe():\n",
+        "    my_order = []\n",
+        "    print(f'Welcome to {cafe_name}!')\n",
+        "    customer = clean_name(input('Your name: '))\n",
+        "    while True:\n",
+        "        print()\n",
+        "        print('1) Menu  2) Menu by category  3) Add item  4) Remove item')\n",
+        "        print('5) View order  6) Allergy-safe items  7) Check out  8) Quit')\n",
+        "        choice = input('Choose 1 to 8: ')\n",
+        "        if choice == '1':\n",
+        "            show_menu(menu)\n",
+        "        elif choice == '2':\n",
+        "            show_menu_by_category(menu, categories)\n",
+        "        elif choice == '3':\n",
+        "            name = clean_name(input('Item name: '))\n",
+        "            if get_price(menu, name) is None:\n",
+        "                print('Sorry, we do not have that item.')\n",
+        "            else:\n",
+        "                quantity = ask_quantity()\n",
+        "                for _ in range(quantity):\n",
+        "                    add_to_order(my_order, menu, name)\n",
+        "                print(f'Added {quantity} x {name}.')\n",
+        "        elif choice == '4':\n",
+        "            name = clean_name(input('Item to remove: '))\n",
+        "            if remove_from_order(my_order, name):\n",
+        "                print(f'Removed one {name}.')\n",
+        "            else:\n",
+        "                print('That item is not in your order.')\n",
+        "        elif choice == '5':\n",
+        "            print('Your order:', my_order)\n",
+        "        elif choice == '6':\n",
+        "            allergy_text = input('Your allergies, separated by commas: ')\n",
+        "            my_allergies = set()\n",
+        "            for word in allergy_text.split(','):\n",
+        "                my_allergies.add(word.strip().lower())\n",
+        "            print('Safe for you:', safe_items(menu, my_allergies))\n",
+        "        elif choice == '7':\n",
+        "            print_receipt(my_order, menu)\n",
+        "            points = add_points(customers, customer, order_total(my_order, menu))\n",
+        "            print(f'{customer} now has {points} points ({get_tier(points)}).')\n",
+        "            sales_log.append(my_order)\n",
+        "            my_order = []\n",
+        "        elif choice == '8':\n",
+        "            print('Goodbye!')\n",
+        "            print_report(daily_report(sales_log, menu))\n",
+        "            break\n",
+        "        else:\n",
+        "            print('Please choose a number from 1 to 8.')"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "K6d0OPdgl736",
+        "outputId": "ebdcc1bc-f30d-4e30-ae71-e5174dd945b8",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "outputs": [
+        {
+          "metadata": {
+            "tags": null
+          },
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Welcome to Coffe Coffe!\n"
+          ]
+        }
+      ],
+      "source": [
+        "# Run your program. Type 8 when you are done.\n",
+        "run_cafe()"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "0VqiRfF_l736"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "# ⭐ Stage 6: Finish Strong\n",
+        "\n",
+        "Your cafe works. Now you add extra features, fix broken code, test your own work, and explain what you built."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ks7Kkq_4l736"
+      },
+      "source": [
+        "## ⭐ Extensions: Pick TWO\n",
+        "\n",
+        "Choose **two** of the four extensions below. Each one is worth 5 points. Complete only the two you choose.\n",
+        "\n",
+        "| Option | Feature | Skills |\n",
+        "|--------|---------|--------|\n",
+        "| **A** | Discount codes | dictionaries, `if` and `else` |\n",
+        "| **B** | Best seller | loops, dictionaries |\n",
+        "| **C** | Tip options | tuples, default parameters, loops |\n",
+        "| **D** | Happy hour | `if` and `and`, numbers |\n",
+        "\n",
+        "Type your two choices in the cell below. Use two different letters."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "wPZMC3isl736"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Type two different letters between the quotes.\n",
+        "my_extensions = ['A', 'B']\n",
+        "\n",
+        "print('You chose Extensions', my_extensions)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "hyG3BKgPl737"
+      },
+      "source": [
+        "### ⭐ Extension A: Discount Codes\n",
+        "\n",
+        "Only complete this if you chose A.\n",
+        "\n",
+        "**Your job:** Write a function named `apply_discount` that lowers a total when the customer gives a valid code.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. `codes` is a dictionary. The key is the code and the value is the discount, like `0.10` for 10 percent.\n",
+        "2. If the code is **in** `codes`, return the total multiplied by `1 - codes[code]`, rounded to 2 decimal places. That line is already written.\n",
+        "3. If the code is not in `codes`, return the total unchanged.\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "3qLm08wnl737"
+      },
+      "outputs": [],
+      "source": [
+        "codes = {'SAVE10': 0.10, 'FALL20': 0.20}\n",
+        "\n",
+        "# TODO: Write a comment here that says what apply_discount does.\n",
+        "def apply_discount(total, code):\n",
+        "    if code in codes:\n",
+        "        return round(total * (1 - codes[code]), 2)\n",
+        "    else:\n",
+        "        return total"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "v8N7zyF7l737"
+      },
+      "outputs": [],
+      "source": [
+        "# Check your work for Extension A.\n",
+        "check('SAVE10 takes 10 percent off', apply_discount(10.0, 'SAVE10'), 9.0)\n",
+        "check('FALL20 takes 20 percent off', apply_discount(10.0, 'FALL20'), 8.0)\n",
+        "check('an unknown code changes nothing', apply_discount(10.0, 'BAD'), 10.0)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "OSAAnfUgl737"
+      },
+      "source": [
+        "### ⭐ Extension B: Best Seller\n",
+        "\n",
+        "Only complete this if you chose B.\n",
+        "\n",
+        "**Your job:** Write a function named `best_seller` that returns the item that appears most often in an order. If the order is empty, it returns `None`.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Use `count_items(order)` to get the counts dictionary.\n",
+        "2. Loop over `counts.items()`.\n",
+        "3. Keep track of the best item so far. If an item's quantity is greater than `best_count`, it becomes the new best item.\n",
+        "4. Return `best_item`.\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "jQFfXXmZl737"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Write a comment here that says what best_seller does.\n",
+        "def best_seller(order):\n",
+        "    counts = count_items(order)\n",
+        "    best_item = None\n",
+        "    best_count = 0\n",
+        "    for item, quantity in counts.items():\n",
+        "        if quantity > best_count:\n",
+        "            best_item = item\n",
+        "            best_count = quantity\n",
+        "    return best_item"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "M9vYtCzSl737"
+      },
+      "outputs": [],
+      "source": [
+        "# Check your work for Extension B.\n",
+        "check('latte is the best seller', best_seller(['Latte', 'Muffin', 'Latte']), 'Latte')\n",
+        "check('cookie is the best seller', best_seller(['Cookie', 'Bagel', 'Cookie', 'Cookie']), 'Cookie')\n",
+        "check('an empty order', best_seller([]), None)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "cEX61YBzl737"
+      },
+      "source": [
+        "### ⭐ Extension C: Tip Options\n",
+        "\n",
+        "Only complete this if you chose C.\n",
+        "\n",
+        "**Your job:** Write two functions. One adds a tip to a total. The other shows the total for every tip choice.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. `tips` is a tuple of tip percentages: `(0.10, 0.15, 0.20)`. It is already written.\n",
+        "2. In `add_tip`, give `tip_percent` a default value of `0.15`.\n",
+        "3. In `tip_choices`, loop over `tips`. For each `percent`, call `add_tip(total, percent)` and add the result to the `results` list.\n",
+        "4. Return `results`.\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "Je_37fCel737"
+      },
+      "outputs": [],
+      "source": [
+        "tips = (0.10, 0.15, 0.20)\n",
+        "\n",
+        "# TODO: Write a comment here that says what add_tip does.\n",
+        "def add_tip(total, tip_percent=___):\n",
+        "    return round(total * (1 + tip_percent), 2)\n",
+        "\n",
+        "# TODO: Write a comment here that says what tip_choices does.\n",
+        "def tip_choices(total):\n",
+        "    results = []\n",
+        "    for percent in ___:\n",
+        "        results.append(add_tip(total, ___))\n",
+        "    return results"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "79ICX2rgl737"
+      },
+      "outputs": [],
+      "source": [
+        "# Check your work for Extension C.\n",
+        "check('default tip is 15 percent', add_tip(20.0), 23.0)\n",
+        "check('a 20 percent tip', add_tip(20.0, 0.20), 24.0)\n",
+        "check('every tip choice', tip_choices(10.0), [11.0, 11.5, 12.0])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "nNrTvA69l737"
+      },
+      "source": [
+        "### ⭐ Extension D: Happy Hour\n",
+        "\n",
+        "Only complete this if you chose D.\n",
+        "\n",
+        "**Your job:** Write a function named `happy_hour_price` that takes 20 percent off between 2 PM and 4 PM. The hour uses a 24-hour clock, so 14 is 2 PM and 16 is 4 PM. Both 14 and 16 count as happy hour.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Check that `hour` is greater than or equal to 14 **and** less than or equal to 16.\n",
+        "2. If it is, return the price multiplied by `0.8`, rounded to 2 decimal places.\n",
+        "3. Otherwise, return the price unchanged.\n",
+        "\n",
+        "**Expected output after the checks:** `PASS` for every line."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "gJxYvS8Rl737"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Write a comment here that says what happy_hour_price does.\n",
+        "def happy_hour_price(price, hour):\n",
+        "    if hour >= ___ and hour <= ___:\n",
+        "        return round(price * ___, 2)\n",
+        "    else:\n",
+        "        return ___"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "4wgT9GGFl737"
+      },
+      "outputs": [],
+      "source": [
+        "# Check your work for Extension D.\n",
+        "check('3 PM is happy hour', happy_hour_price(4.0, 15), 3.2)\n",
+        "check('2 PM is happy hour', happy_hour_price(4.0, 14), 3.2)\n",
+        "check('4 PM is happy hour', happy_hour_price(4.0, 16), 3.2)\n",
+        "check('5 PM is not', happy_hour_price(4.0, 17), 4.0)\n",
+        "check('10 AM is not', happy_hour_price(4.0, 10), 4.0)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "aBJFmim2l737"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "# 🐛 Debugging: Fix Four Broken Functions\n",
+        "\n",
+        "A new employee wrote four functions, and every one has a bug. Your job is to find each bug and fix it. Each task is worth 3 points.\n",
+        "\n",
+        "**How to debug:**\n",
+        "1. Run the cell and read the result or the error message.\n",
+        "2. Look at the line the error points to.\n",
+        "3. Fix the code and run it again.\n",
+        "4. Write a comment above your fix that says what was wrong.\n",
+        "\n",
+        "### 🐛 Debugging 1: The Short Total\n",
+        "\n",
+        "This function runs without an error, but the total is wrong. For `['Latte', 'Muffin']` it should return `7.75` but it returns `4.5`.\n",
+        "\n",
+        "**Hint:** A function leaves as soon as it reaches `return`. Look at where the `return` line is indented."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "7RC90kBrl737"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Fix the bug. Write a comment that says what was wrong intdented\n",
+        "# inside the for loop, exiting after the firt item.\n",
+        "def cart_total(order, menu):\n",
+        "    total = 0\n",
+        "    for item in order:\n",
+        "        total += menu[item]\n",
+        "        return total\n",
+        "\n",
+        "print(cart_total(['Latte', 'Muffin'], menu))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "Od28D-Vwl737"
+      },
+      "outputs": [],
+      "source": [
+        "# Check your work.\n",
+        "check('cart total', cart_total(['Latte', 'Muffin'], menu), 7.75)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "nbcZW5NBl737"
+      },
+      "source": [
+        "### 🐛 Debugging 2: The Missing Answer\n",
+        "\n",
+        "This code gives a `TypeError`. The function is supposed to give back the price with tax, but something is missing.\n",
+        "\n",
+        "**Hint:** `None` means the function did not return anything. Compare `print` and `return`.\n",
+        "\n",
+        "**Expected output:**\n",
+        "```\n",
+        "Total with tax: 10.8\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "rQ7xVr-Xl737"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Fix the function. Write a comment that says what was wrong.\n",
+        "def with_tax(price):\n",
+        "    tax = price * 0.08\n",
+        "    return(price + tax)\n",
+        "\n",
+        "total = with_tax(10)\n",
+        "print('Total with tax:', round(total, 2))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "3VHAVjZpl737"
+      },
+      "outputs": [],
+      "source": [
+        "# Check your work.\n",
+        "check('price with tax', round(with_tax(10), 2), 10.8)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "AY_tOvMVl737"
+      },
+      "source": [
+        "### 🐛 Debugging 3: The Expensive Item\n",
+        "\n",
+        "This code gives a `SyntaxError` before it even runs. The function should return `True` for items that cost 4 dollars or more.\n",
+        "\n",
+        "**Hint:** One equals sign **stores** a value. To **compare** two values you need a comparison operator, like `>=`.\n",
+        "\n",
+        "**Expected output after the check:** `PASS` for both lines."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "RRZzU3Arl737"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Fix the bug. Write a comment that says what was wrong\n",
+        "# Used single = instead of >=\n",
+        "def is_expensive(price):\n",
+        "    if price >= 4.00:\n",
+        "        return True\n",
+        "    else:\n",
+        "        return False"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "IUcu-O2ll738"
+      },
+      "outputs": [],
+      "source": [
+        "# Check your work.\n",
+        "check('a latte is expensive', is_expensive(4.50), True)\n",
+        "check('a drip coffee is not', is_expensive(2.75), False)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "3cB4EEexl738"
+      },
+      "source": [
+        "### 🐛 Debugging 4: The Skipped Item\n",
+        "\n",
+        "This function should turn an order into numbered lines, like `['1. Latte', '2. Muffin']`. It runs without an error, but the first item is missing.\n",
+        "\n",
+        "**Hint:** `range(1, len(order))` starts at index 1, but lists start at index 0. Also check that the numbers shown start at 1.\n",
+        "\n",
+        "**Expected output after the check:** `PASS` for both lines."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "05CIZrqWl738"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Fix the bug. Write a comment that says what was wrong.\n",
+        "def list_order(order):\n",
+        "    lines = []\n",
+        "    for i in range(len(order)):\n",
+        "        lines.append(f'{i}. {order[i]}')\n",
+        "    return lines\n",
+        "\n",
+        "print(list_order(['Latte', 'Muffin']))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "QrZldlPJl738"
+      },
+      "outputs": [],
+      "source": [
+        "# Check your work.\n",
+        "check('two items', list_order(['Latte', 'Muffin']), ['1. Latte', '2. Muffin'])\n",
+        "check('an empty order', list_order([]), [])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "08i-Cn-il738"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "# 🧪 Write Your Own Tests\n",
+        "\n",
+        "A good programmer tests their own work. Here you write four checks of your own. Each one calls a function you wrote and says what the answer should be.\n",
+        "\n",
+        "**Your job:** Fill in each check so that it prints `PASS`. Use different items and numbers than the checks above.\n",
+        "\n",
+        "**Steps:**\n",
+        "1. Test 1: pick a menu item and its price.\n",
+        "2. Test 2: pick one item and work out its total with tax. Use a calculator, then round to 2 decimal places.\n",
+        "3. Test 3: pick a small order list and what `count_items` should return.\n",
+        "4. Test 4: pick some text and what `parse_quantity` should return for it.\n",
+        "\n",
+        "**Grading:** 2 points if all four tests are filled in and print `PASS`."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "XgvxaRwdl738"
+      },
+      "outputs": [],
+      "source": [
+        "# TODO: Fill in every ___ so each check prints PASS.\n",
+        "check('test 1: a price', get_price(menu, 'Bagel'), ___)\n",
+        "check('test 2: a total', order_total(['Dirp Coffe'], menu), 2.97)\n",
+        "check('test 3: counting', count_items(['Bagel', 'Bagel']), {'Bagel': 2})\n",
+        "check('test 4: a quantity', parse_quantity('5'), 5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "bpK0CFGWl738"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "# ✍️ Written Questions\n",
+        "\n",
+        "Answer each question in your own words. Write 2 to 4 full sentences in the cell below each question. Start each line with `#`. Use examples from your own code.\n",
+        "\n",
+        "### ✍️ W1: How your program works\n",
+        "\n",
+        "Describe what happens when a customer uses your program, from the moment you run `run_cafe()` to the moment they quit."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "fqN7cJPDl738"
+      },
+      "outputs": [],
+      "source": [
+        "# Write your answer here. Use 2 to 4 full sentences.\n",
+        "#starting the café it begins with an empty order list with a welcoming message of coffee, tems and or check out you can print a receipt.\n",
+        "# coffee the name of my café I didn't ask for customer name and then loops to choices one through eight. That shows the menu allowing them to add a remove their items it goes through inspect and allergy,\n",
+        "# safe items and or check out you can print a receipt. We choose seven and it shows the loyalty points.items and or check out you can print a receipt.\n",
+        "#"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "NHdv1qTBl738"
+      },
+      "source": [
+        "### ✍️ W2: Choosing data structures\n",
+        "\n",
+        "You used a dictionary for the menu, a list for the order, a set for allergens, and a tuple for the hours. Pick two of these and explain why each was a good choice."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "IqSz-ngDl738"
+      },
+      "outputs": [],
+      "source": [
+        "# Write your answer here. Use 2 to 4 full sentences.\n",
+        "#dictionary was chosen for the menu because it's gonna have the names of multiple different things\n",
+        "# the list was useful as allowed you to use and see prices quickly and they won't change so that's good\n",
+        "#list allow the customers to add me items as they want or duplicate items"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "y0HocZUAl738"
+      },
+      "source": [
+        "### ✍️ W3: One of your functions\n",
+        "\n",
+        "Pick one function you wrote. Name its parameters, say what it returns, and explain why it is better as a function than as repeated code."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "mIRv35FVl738"
+      },
+      "outputs": [],
+      "source": [
+        "# Write your answer here. Use 2 to 4 full sentences.\n",
+        "# order total has parameters order menu and tax rate defaulting at 0.08 returns\n",
+        "# it is running this way because if tax rate ever changes updating it in one place will allow the whole program to stay consistent"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "bDvqCuMjl738"
+      },
+      "source": [
+        "### ✍️ W4: A bug you fixed\n",
+        "\n",
+        "Describe one bug or error you ran into while building this project. What did the error say or what went wrong, what caused it, and how did you fix it?"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "KgAG4yw_l738"
+      },
+      "outputs": [],
+      "source": [
+        "# Write your answer here. Use 2 to 4 full sentences.\n",
+        "# did the buggy two the line of code of round with tax 10 was causing a type error with with the with tax portion only called print. It did not return a value leaving total as none python put is around none as a number so changing print price plus tax to return price plus tax fix the function, so it has the numeric result back to the collar.\n",
+        "#"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "uQsDtXgul738"
+      },
+      "source": [
+        "### ✍️ W5: What comes next\n",
+        "\n",
+        "Which two extensions did you choose, and why? Name one more feature you would add to your cafe program and one Python idea from this course that you would use to build it."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "VqQZ8-9Zl738"
+      },
+      "outputs": [],
+      "source": [
+        "# Write your answer here. Use 2 to 4 full sentences.\n",
+        "#I chose a and b something I would add is daily sales.\n",
+        "#I would do this through Python by using dictionaries and file handling\n",
+        "#"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "R2Uum9r1l738"
+      },
+      "source": [
+        "---\n",
+        "\n",
+        "# 🎉 Your cafe is open!\n",
+        "\n",
+        "### Before you submit\n",
+        "\n",
+        "1. Make sure no `___` blanks are left in any cell you were asked to complete.\n",
+        "2. Make sure every function has a comment above it.\n",
+        "3. Click **Kernel > Restart and Run All**. Every cell should run. The cells for `ask_quantity()` and `run_cafe()` will wait for you to type. Type `8` to quit `run_cafe()`.\n",
+        "4. Make sure the Check your work cells for Milestones 1 to 14, your two extensions, all four debugging tasks, and your own tests all print `PASS`.\n",
+        "5. Make sure you filled in your plan and answered W1 to W5.\n",
+        "6. Save the notebook and submit it."
+      ]
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "name": "python"
+    },
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
